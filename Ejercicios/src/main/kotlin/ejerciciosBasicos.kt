@@ -1,3 +1,4 @@
+import javax.print.attribute.standard.PagesPerMinute
 import kotlin.reflect.typeOf
 
 /**
@@ -190,14 +191,14 @@ fun ejercicioBasico3(){
  * Para probar las modificaciones a los métodos anteriores, solicita al usuario el número de caballos para un coche y haz lo mismo para el número de puertas.
  */
 
-
+// PREGUNTAR POR QUE SI NO SE HACEN PRIVATE LOS ATROBUTOS, DA ERROR EN EL GET Y SET
 class Coche(
-    var color: String,
-    var marca: String,
-    var modelo: String,
-    var numCaballos: Int,
-    var numPuertas: Int,
-    var matricula: String
+    private var color: String,
+    private var marca: String,
+    private var modelo: String,
+    private var numCaballos: Int,
+    private var numPuertas: Int,
+    private var matricula: String
 )   {
 
     // GETTERS / SETTERS
@@ -206,7 +207,7 @@ class Coche(
     fun setColor(color2: String){
         this.color = color2
     }
-    
+
 
     fun getMarca(): String = this.marca
     fun setMarca(marca2: String){
@@ -221,12 +222,16 @@ class Coche(
 
     fun getNumCaballos():Int = this.numCaballos
     fun setNumCaballos(numCaballos2: Int){
+        //require(numCaballos2 in 70..700) {"ERROR: Los caballos deben estar entre 70-700"}
+        if (numCaballos2 !in 70..700) throw IllegalArgumentException ("ERROR: Los caballos deben estar entre 70-700")
         this.numCaballos = numCaballos2
     }
 
 
+    // TODO: Hacer try catch, mostrar el error, y devolver un valor por defecto cuando el introducido no sea correcto
     fun getNumPuertas():Int = this.numPuertas
     fun setNumPuertas(numPuertas2: Int) {
+        require(numPuertas2 in 3..5) { "El numero de puertas debe ser 3-5" }
         this.numPuertas = numPuertas2
     }
 
@@ -236,11 +241,122 @@ class Coche(
         this.matricula = matricula2
     }
 
+
+    // Override toString()
+    override fun toString(): String {
+        return "Datos coche - Color: ${this.color}, Marca: ${this.marca}, Modelo: ${this.modelo}, Numero de Caballos: ${this.numCaballos}, Numero de Puertas: ${this.numPuertas}, Matricula: ${this.matricula}"
+    }
+
 }
 
 
 
 
 fun ejercicioBasico4(){
+
+    // Lista que contiene cada coche creado
+    val coches = listOf(
+        Coche("Rojo", "Toyota", "Corolla", 120, 4, "ABC123"),
+        Coche("Azul", "Honda", "Civic", 90, 5, "XYZ789"),
+        Coche("Verde", "Ford", "Focus", 150, 4, "DEF456"),
+        Coche("Negro", "Volkswagen", "Golf", 110, 3, "GHI789")
+    )
+
+    // Mostrar informacion coches por defecto
+    println("DATOS COCHES: ")
+    for (coche in coches){
+        println(coche.toString())
+    }
+
+    // Cambiar color de estos coches accediendo a sus posicione en la lista
+    coches[0].setColor("Amarillo") //coche1
+    coches[3].setColor("Verde") //coche2
+
+    // Mostrar informacion coches con los cambios
+    println("DATOS COCHES ACTUALIZADOS: ")
+    for (coche in coches){
+        println(coche.toString())
+    }
+
+    // Solicitar num de caballos y aplicarlo
+    println("Ingresa numero de caballos: ")
+    coches[0].setNumCaballos(readln().toIntOrNull() ?:0)
+
+    // Solicitar num de puertas y aplicarlo
+    println("Ingresa numero de puertas: ")
+    coches[0].setNumPuertas(readln().toIntOrNull() ?:0)
+
+    // Mostrar informacion de coche1 actualizada usando nuestra funcion reemplazada de toString()
+    println("Informacion actualizada coche1: ")
+    println(coches[0].toString())
+
+
+    // Se podria hacer sin usar lista, y haciendo coche1.toString(), coche2.toString() etc...
+
+}
+
+
+
+/**
+ * Ejercicio 4.5¶
+ * Crear una clase Tiempo, con atributos hora, minuto y segundo, que pueda ser construida indicando los tres atributos, sólo hora y minuto o sólo la hora (si no se indica, el valor de minuto o segundo será 0).
+ *
+ * Crear el método toString() para mostrar el tiempo en formato: XXh XXm XXs.
+ *
+ * En el programa principal, debe solicitar por teclado hora, minuto y segundo de forma que se puedan omitir los segundos o los minutos (y segundos, claro) e instancie la clase Tiempo mostrando su valor.
+ */
+
+class Tiempo(private var hora: Int){
+    private var minuto: Int = 0
+    private var segundo: Int = 0
+
+
+
+
+    // Constructor para crear con hora y minuto
+    constructor(hora: Int, minuto: Int  ): this(hora) {
+        this.minuto = minuto
+    }
+
+    // Contructor para crear con hora minuto y segundo
+    constructor(hora: Int, minuto: Int, segundo: Int): this(hora, minuto){
+        this.segundo = segundo
+    }
+
+    override fun toString(): String {
+        return "Tiempo - ${this.hora}h ${this.minuto}m ${this.segundo}s"
+    }
+
+
+}
+
+
+fun pedirIntValido(): Int{
+    var num: Int?
+
+    do {
+        val valor = readln()
+        if (valor == "") return 0
+        num = valor.toIntOrNull()
+
+        if (num == null || num !in 0..24) println("Debes introducir un numero valido (0-24s): ")
+
+    }while (num == null || num !in 0..24)
+    return num
+}
+
+fun ejercicioBasico5(){
+    println("Introduce hora: ")
+    val hora = pedirIntValido()
+
+    println("Introduce minuto (ENTER para omitir): ")
+    val minuto = pedirIntValido()
+
+    println("Introduce segundo (ENTER para omitir): ")
+    val segundo = pedirIntValido()
+
+    val tiempo = Tiempo(hora, minuto, segundo)
+
+    print(tiempo.toString())
 
 }
