@@ -5,6 +5,7 @@ fun main(args: Array<String>) {
     //ejercicioBasico4()
     //ejercicioBasico5()
     //ejercicioBascio6()
+    ejercicioBascio7()
 
 
     // EJERCICIO 1 y 2 HECHO DE OTRA FORMA DIEGO

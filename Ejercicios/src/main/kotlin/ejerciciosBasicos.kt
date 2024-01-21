@@ -401,7 +401,7 @@ fun ejercicioBasico5(){
  */
 
 
-data class Compra(val cliente: String, val dia: Int, val monto: Double){
+data class Compra(val cliente: Cliente, val dia: Int, val monto: Double){
 }
 
 data class Cliente(val nombre: String, val domicilio: String){
@@ -415,27 +415,130 @@ data class Domicilio(val calle: String, val numero: Int, ) {
 
 class RepositorioCompras(){
     val listaCompras = mutableListOf<Compra>()
-    fun agregarCompra(){
-        listaCompras.add(Compra)
+    fun agregarCompra(cliente: Cliente, dia: Int, monto: Double){
+        listaCompras.add( Compra(cliente, dia, monto) )
     }
 
     fun domicilios(){
+        val domiciliosUnicos = mutableSetOf<String>()
+        for (compra in listaCompras){
+            domiciliosUnicos.add(compra.cliente.domicilio)
+            //println("Cliente: ${compra.cliente.nombre}, domicilio: ${compra.cliente.domicilio}, dia: ${compra.dia} monto: ${compra.monto}")
 
+        }
+        println(domiciliosUnicos)
     }
 }
 
 
 fun ejercicioBascio6(){
-    val compra1 = Compra("Antonio", 40, 23.45)
+
     val cliente1 = Cliente("Antonio", "Calle juan juanito 3")
-    val domicilio = Domicilio("C/ Tomasito tomatero", 4)
+    val cliente2 = Cliente("Pedrto", "Calle perinavo 38")
+    val cliente3 = Cliente("Alberto", "Calle areola 1")
 
 
+    val compra1 = Compra(cliente1, 3, 34.4)
+    val compra2 = Compra(cliente1, 55, 566.7)
+    val compra3 = Compra(cliente2, 2, 18.7)
+    val compra4 = Compra(cliente2, 15, 69.7)
+    val compra5 = Compra(cliente3, 6, 8.7)
 
+
+    val repositorio = RepositorioCompras()
+    repositorio.agregarCompra(compra1.cliente, compra1.dia, compra1.monto)
+    repositorio.agregarCompra(compra2.cliente, compra2.dia, compra2.monto)
+    repositorio.agregarCompra(compra3.cliente, compra3.dia, compra3.monto)
+    repositorio.agregarCompra(compra4.cliente, compra4.dia, compra4.monto)
+    repositorio.agregarCompra(compra5.cliente, compra5.dia, compra5.monto)
+    repositorio.domicilios()
 
 }
 
 
+/**
+ * Ejercicio 4.7¶
+ * Se quiere crear una clase Cuenta la cual se caracteriza por tener asociado un número de cuenta y un saldo disponible.
+ *
+ * Además, se puede consultar el saldo disponible, recibir abonos y realizar pagos.
+ *
+ * Crear también una clase Persona, que se caracteriza por un DNI y una lista de cuentas bancarias.
+ *
+ * La Persona puede tener asociada hasta 3 cuentas bancarias, y debe tener un método que permita añadir cuentas (hasta 3 el máximo permitido).
+ *
+ * También debe contener un método que devuelva si la persona es morosa (si tienen alguna cuenta con saldo negativo).
+ *
+ * En el programa principal, instanciar un objeto Persona con un DNI cualquiera, así como dos objetos cuenta, una sin saldo inicial y otra con 700 euros. La persona recibe la nómina mensual, por lo que ingresa 1100 euros en la primera cuenta, pero tiene que pagar el alquiler de 750 euros con la segunda. Imprimir por pantalla si la persona es morosa.
+ *
+ * Posteriormente hacer una transferencia de una cuenta a otra (de forma que todos los saldos sean positivos) y mostrar por pantalla el estado de la persona.
+ */
 
-// EJERCICIO DIEGO
 
+
+class Cuenta(val numCuenta: Int, var saldoDispo: Double){
+
+
+    fun consultarSaldo(): Double{
+        return this.saldoDispo
+    }
+
+    fun recibirAbono(cantidad: Double){
+        println("Has recibido billetes: ${cantidad}€")
+        this.saldoDispo += cantidad
+    }
+
+    fun realizarPago(cantidad: Double){
+        this.saldoDispo -= cantidad
+        println("Has pagado: ${cantidad}€")
+    }
+}
+
+class PersonaEj7(val dni: Int, var listaCuentas: MutableList<Cuenta>){
+    fun aniadirCuenta(cuenta: Cuenta){
+        if (this.listaCuentas.size < 3){
+            this.listaCuentas.add(cuenta)
+        }
+        else{
+            print("Error - Limite de cuentas alcanzado (3)")
+        }
+    }
+
+    fun comprobarMorosidad(): Boolean{
+        for (cuenta in this.listaCuentas){
+            if (cuenta.saldoDispo < 0 ){
+                return true
+            }
+        }
+        return false
+    }
+}
+
+fun ejercicioBascio7(){
+    val cuenta1 = Cuenta(1, 0.0)
+    val cuenta2 = Cuenta(2, 700.0)
+
+    val persona1 = PersonaEj7(1234567, mutableListOf())
+
+    // Añadirle a la persona las cuentas
+    persona1.aniadirCuenta(cuenta1)
+    persona1.aniadirCuenta(cuenta2)
+
+    // Recibe la nomina en la primera cuenta
+    cuenta1.recibirAbono(1100.0)
+
+    // Paga alquiler con la segunda
+    cuenta2.realizarPago(750.0)
+
+    /// Comprobar morosidad
+    if (persona1.comprobarMorosidad()) println("Morosa ") else println("No morosa")
+
+    //Transferencia de una cuenta a otra para saldar morosidad
+    cuenta2.recibirAbono((cuenta1.consultarSaldo()) / 2)
+
+    // Mostrar estado de la persona
+
+    for (cuenta in persona1.listaCuentas){
+        println("Cuenta ${cuenta.numCuenta} Saldo: ${cuenta.saldoDispo}")
+    }
+
+}
