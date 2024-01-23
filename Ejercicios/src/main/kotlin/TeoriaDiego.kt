@@ -1,3 +1,84 @@
+import java.util.*
+
+/**
+ * class MiClase {
+ *     var miPropiedad: Int = 0
+ *         get() {
+ *             println("Obteniendo el valor de miPropiedad")
+ *             return field
+ *         }
+ *         set(value) {
+ *             println("Estableciendo el valor de miPropiedad a $value")
+ *             field = value
+ *         }
+ * }
+ */
+
+
+class Circulo(private var radio: String){
+
+    var radio2: String
+        // No necesariamente haria falta el get para hacer el set, ya que se crearia por defecto en segundo plano
+        get() {
+            return this.radio
+            }
+        set(value) {
+            this.radio = value.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        }
+
+}
+
+
+
+class Circulo(private var radio: String){
+
+    // Se inicializa al crear el ibjeto con la mayuscula desde un principio, antes de hacer el set
+    init {
+        this.radio = this.radio.capitalize()
+
+    }
+}
+
+
+
+
+
+
+class Triangulo {
+    var largo: Double = 0.0
+        set(value) {
+            require(value in 10.0..100.0) { "Error: el largo debe estar entre 10 y 100" }
+            field = value
+        }
+
+    constructor(largo: Double) {
+        this.largo = largo
+    }
+}
+
+fun main() {
+    var largo: Double
+
+    do {
+        println("Introduce largo:")
+        largo = readLine()?.toDoubleOrNull() ?: 0.0
+
+        try {
+            val triangulo1 = Triangulo(largo)
+            // Si llegamos aquí, el valor de largo es válido
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
+    } while (largo !in 10.0..100.0)
+}
+
+
+
+
+
+
+
+
 /**
  * Ejercicio 4.1¶
  * Crear una clase Persona que tenga nombre, peso (en kg con decimales), altura (en metros con decimales) y su imc.
