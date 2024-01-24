@@ -182,7 +182,7 @@ fun ejercicioBasico3(){
 
 
 
-
+// ANTIGUO
 /**
  * Ejercicio 4.4¶
  * Crear una clase Coche, a través de la cual se pueda conocer el color del coche, la marca, el modelo, el número de caballos, el número de puertas y la matrícula. Crear el constructor del coche, así como los métodos estándar: getters, setters y toString().
@@ -196,32 +196,7 @@ fun ejercicioBasico3(){
  * Realiza otra modificación al método setNumPuertas() para que no se pueda actualizar con un valor inferior a 3, ni superior a 5... pero esta vez utiliza require.
  *
  * Para probar las modificaciones a los métodos anteriores, solicita al usuario el número de caballos para un coche y haz lo mismo para el número de puertas.
- */
 
-
-/**
- * EJ 4 V2
- * Ejercicio 4.4¶
- * Crear una clase Coche, a través de la cual se pueda conocer el color del coche, la marca, el modelo, el número de caballos, el número de puertas y la matrícula. Crear el constructor del coche, así como el método toString().
- *
- * Marca y modelo no podrán ser blancos ni nulos y no podrán modificarse. --
- * Número de caballos, número de puertas y matrícula no podrán modificarse, ni podrán ser nulos.
- * Color podrá modificarse, pero no podrá ser nulo.
- * Recuerda que Kotlin añade los getters y setters con el comportamiento por defecto, por lo que no es necesario que los implementes, a no ser que tengas que añadir alguna funcionalidad extra.
- *
- * Modifica el atributo matricula para que no permita actualizar la matrícula con un valor que no tenga 7 caracteres.
- * Los atributos de modelo la marca siempre se devolverán con la primera letra en mayúscula.
- * Realiza también una modificación del atributo número de caballos, para que no permita actualizar el atributo numCaballos con un valor interior a 70, ni superior a 700.
- * Realiza una modificación del atributo número de puertas, para que no permita actualizar el atributo numPuertas con un valor inferior a 3, ni superior a 5.
- * Ten en cuenta todas estas condiciones a la hora de crear el constructor de la clase.
- * En el programa principal, instancia varios coches y muéstralos por pantalla. Probar las modificaciones anteriores, modifica el número de caballos para un coche y haz lo mismo para el número de puertas, el color, la marca y modelo. Vuelve a mostrarlos por pantalla.
- *
- * Intenta instanciar y modificar con la marca y modelo con valores nulos o blancos y comprueba que no es posible.
- * Intenta instanciar y modificar con el número de caballos con un valor inferior a 70 o superior a 700 y comprueba que no es posible.
- * Intenta instanciar y modificar con el número de puertas con un valor inferior a 3 o superior a 5 y comprueba que no es posible.
- * Intenta instanciar y modificar con la matrícula con un valor que no tenga 7 caracteres y comprueba que no es posible.
- * Intenta instanciar y modificar con el color, el número de caballos, el número de puertas y la matrícula con valores nulos/blancos y comprueba que no es posible.
- */
 
 
 class Coche(
@@ -260,7 +235,7 @@ class Coche(
     }
 
 
-    // TODO: Hacer try catch, mostrar el error, y devolver un valor por defecto cuando el introducido no sea correcto
+
     fun getNumPuertas():Int = this.numPuertas
     fun setNumPuertas(numPuertas2: Int) {
         require(numPuertas2 in 3..5) { "El numero de puertas debe ser 3-5" }
@@ -324,6 +299,143 @@ fun ejercicioBasico4(){
     // Se podria hacer sin usar lista, y haciendo coche1.toString(), coche2.toString() etc...
 
 }
+**/
+
+
+// NUEVO 4.4
+/**
+ * EJ 4 V2
+ * Ejercicio 4.4¶
+ * Crear una clase Coche, a través de la cual se pueda conocer el color del coche, la marca, el modelo, el número de caballos, el número de puertas y la matrícula. Crear el constructor del coche, así como el método toString().
+ *
+ * Marca y modelo no podrán ser blancos ni nulos y no podrán modificarse. --
+ * Número de caballos, número de puertas y matrícula no podrán modificarse, ni podrán ser nulos.
+ * Color podrá modificarse, pero no podrá ser nulo.
+ * Recuerda que Kotlin añade los getters y setters con el comportamiento por defecto, por lo que no es necesario que los implementes, a no ser que tengas que añadir alguna funcionalidad extra.
+ *
+ * Modifica el atributo matricula para que no permita actualizar la matrícula con un valor que no tenga 7 caracteres.
+ * Los atributos de modelo la marca siempre se devolverán con la primera letra en mayúscula.
+ * Realiza también una modificación del atributo número de caballos, para que no permita actualizar el atributo numCaballos con un valor interior a 70, ni superior a 700.
+ * Realiza una modificación del atributo número de puertas, para que no permita actualizar el atributo numPuertas con un valor inferior a 3, ni superior a 5.
+ * Ten en cuenta todas estas condiciones a la hora de crear el constructor de la clase.
+ * En el programa principal, instancia varios coches y muéstralos por pantalla. Probar las modificaciones anteriores, modifica el número de caballos para un coche y haz lo mismo para el número de puertas, el color, la marca y modelo. Vuelve a mostrarlos por pantalla.
+ *
+ * Intenta instanciar y modificar con la marca y modelo con valores nulos o blancos y comprueba que no es posible.
+ * Intenta instanciar y modificar con el número de caballos con un valor inferior a 70 o superior a 700 y comprueba que no es posible.
+ * Intenta instanciar y modificar con el número de puertas con un valor inferior a 3 o superior a 5 y comprueba que no es posible.
+ * Intenta instanciar y modificar con la matrícula con un valor que no tenga 7 caracteres y comprueba que no es posible.
+ * Intenta instanciar y modificar con el color, el número de caballos, el número de puertas y la matrícula con valores nulos/blancos y comprueba que no es posible.
+ **/
+
+
+class Coche(
+    var color: String,
+    marca: String,
+    modelo: String,
+    numCaballos: Int,
+    numPuertas: Int,
+    matricula: String
+){
+    init {
+        require(marca.isNotBlank()){"Error - La marca no puede estar vacia"}
+        require(modelo.isNotBlank()){"Error - El modelo no puede estar vacio"}
+        require(matricula.length == 7) { "ERROR - La longitud de la matricula debe ser 7" }
+        require(numCaballos in 70..700) { "ERROR - Los cv deben estar en el rango de 70..700" }
+        require(numPuertas in 3..5) { "ERROR - El num de puertas debe estar entre 3..5" }
+    }
+
+
+    var matricula: String = matricula
+        set(value) {
+            //require(value.length == 7) { "Error - La longitud de la matriicula debe ser 7" }
+            //field = value
+            if (value.length != 7) println( "ERROR - La longitud de la matriicula debe ser 7" ) else field = value
+        }
+
+    var marca: String = marca.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        set(value){
+            if (value.isEmpty()) println("ERROR - La marca no puede estar vacia") else field = value
+        }
+
+
+    var modelo: String = modelo.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        set(value){
+            if (value.isEmpty()) println("ERROR - El modelo no puede estar vacio") else field = value
+        }
+    var numCaballos: Int = numCaballos
+        set(value) {
+            //require(value in 70..700) { "Los cv deben estar en un rango 70-700. No se ha modificado" }
+            //field = value
+            if (value !in 70..700) println("ERROR - Los cv deben estar en un rango 70-700. No se ha modificado") else field = value
+
+        }
+
+    var numPuertas: Int = numPuertas
+        set(value){
+            //require(value in 3..5) { "Numero de puertas debe estar entre 3-5. No se ha modificado" }
+            //field = value
+            if (value !in 3..5) println("ERROR - Numero de puertas debe estar entre 3-5. No se ha modificado") else field = value
+
+        }
+
+
+    // Override toString()
+    override fun toString(): String {
+        return "Datos coche - Color: ${this.color}, Marca: ${this.marca}, Modelo: ${this.modelo}, Numero de Caballos: ${this.numCaballos}, Numero de Puertas: ${this.numPuertas}, Matricula: ${this.matricula}"
+    }
+}
+
+
+
+fun ejercicioBasico4(){
+
+    // Creamos coches
+    var coche1 = Coche("rojo", "audi", "rs6", 560, 5,"123d567")
+    var coche2 = Coche("azul", "bmw", "m3", 450, 4, "XYZ5678")
+    var coche3 = Coche("negro", "mercedes", "amg c63", 510, 4, "DEF9012")
+
+
+    // Mostramos los coches
+    println(coche1.toString())
+    println(coche2.toString())
+    println(coche3.toString())
+
+    // Modificamos valores
+    coche1.matricula = "abcdefg"
+    coche1.numPuertas = 3
+    coche1.color = "platino"
+    coche1.numCaballos = 367
+
+    // Mostramos los coches
+    println("***************************************************************************")
+    println("***************************************************************************")
+    println(coche1.toString())
+    println(coche2.toString())
+    println(coche3.toString())
+
+    // Intentamos modificar
+    coche2.modelo = ""
+    coche2.marca = ""
+    coche2.numCaballos = 785
+    coche2.numPuertas = 6
+    coche3.matricula = "456123"
+
+    // Mostramos los coches
+    println("***************************************************************************")
+    println("***************************************************************************")
+    println(coche1.toString())
+    println(coche2.toString())
+    println(coche3.toString())
+
+    // Intentamos instanciar
+    try {
+        val coche4 = Coche("", "", "", 0, 0, "")
+    }catch (e: IllegalArgumentException){
+        println("ERROR AL INSTANCIAR EL COCHE- $e")
+    }
+}
+
+
 
 
 
