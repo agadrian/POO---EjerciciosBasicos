@@ -337,22 +337,25 @@ class Coche(
     matricula: String
 ){
     init {
+
         require(marca.isNotBlank()){"Error - La marca no puede estar vacia"}
         require(modelo.isNotBlank()){"Error - El modelo no puede estar vacio"}
         require(matricula.length == 7) { "ERROR - La longitud de la matricula debe ser 7" }
+        //requireNumCaballos(numCaballos)
         require(numCaballos in 70..700) { "ERROR - Los cv deben estar en el rango de 70..700" }
         require(numPuertas in 3..5) { "ERROR - El num de puertas debe estar entre 3..5" }
     }
 
 
-    var matricula: String = matricula
+    var matricula: String = ""
         set(value) {
             //require(value.length == 7) { "Error - La longitud de la matriicula debe ser 7" }
             //field = value
             if (value.length != 7) println( "ERROR - La longitud de la matriicula debe ser 7" ) else field = value
         }
 
-    var marca: String = marca.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    var marca: String = marca
+        get() = field.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         set(value){
             if (value.isEmpty()) println("ERROR - La marca no puede estar vacia") else field = value
         }
@@ -364,9 +367,11 @@ class Coche(
         }
     var numCaballos: Int = numCaballos
         set(value) {
+            //requireNumCaballos(value)
             //require(value in 70..700) { "Los cv deben estar en un rango 70-700. No se ha modificado" }
             //field = value
             if (value !in 70..700) println("ERROR - Los cv deben estar en un rango 70-700. No se ha modificado") else field = value
+
 
         }
 
@@ -377,6 +382,10 @@ class Coche(
             if (value !in 3..5) println("ERROR - Numero de puertas debe estar entre 3-5. No se ha modificado") else field = value
 
         }
+
+    private fun requireNumCaballos(numCaballos: Int){
+        require(numCaballos in 70..700) { "Los cv deben estar en un rango 70-700. No se ha modificado" }
+    }
 
 
     // Override toString()
@@ -390,9 +399,9 @@ class Coche(
 fun ejercicioBasico4(){
 
     // Creamos coches
-    var coche1 = Coche("rojo", "audi", "rs6", 560, 5,"123d567")
-    var coche2 = Coche("azul", "bmw", "m3", 450, 4, "XYZ5678")
-    var coche3 = Coche("negro", "mercedes", "amg c63", 510, 4, "DEF9012")
+    val coche1 = Coche("rojo", "audi", "rs6", 560, 5,"123d567")
+    val coche2 = Coche("azul", "bmw", "m3", 450, 4, "XYZ5678")
+    val coche3 = Coche("negro", "mercedes", "amg c63", 510, 4, "DEF9012")
 
 
     // Mostramos los coches
@@ -405,6 +414,8 @@ fun ejercicioBasico4(){
     coche1.numPuertas = 3
     coche1.color = "platino"
     coche1.numCaballos = 367
+
+
 
     // Mostramos los coches
     println("***************************************************************************")
@@ -536,9 +547,11 @@ Añadir un nuevo método esMenorQue(t:Tiempo):Boolean, que devuelve true si el t
 */
 
 
-class Tiempo(val hora: Int, val minuto: Int = 0, val segundo: Int = 0){
+class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
+
 
     init {
+
         require(hora in 0..23) { "ERROR - La hora debe estar entre 0..23" }
         require(minuto in 0..59) { "ERROR - Los minutos deben estar entre 0..59" }
         require(segundo in 0..59) { "ERROR - Los segundos deben estar entre 0..59" }
@@ -546,12 +559,12 @@ class Tiempo(val hora: Int, val minuto: Int = 0, val segundo: Int = 0){
     }
 
 
-
-
-
+    /**
+     * Reemplazamos la funcion toString() para mostrar la hora formateada correctamente
+     */
     override fun toString():String{
         var horaF = ""
-        if (this.hora < 10) horaF = "0$this.hora" else horaF = this.hora.toString()
+        if (this.hora < 10) horaF = "0${this.hora}" else horaF = this.hora.toString()
 
         var minF = ""
         if (this.minuto < 10) minF = "0${this.minuto}" else minF = this.minuto.toString()
@@ -563,10 +576,39 @@ class Tiempo(val hora: Int, val minuto: Int = 0, val segundo: Int = 0){
     }
 }
 
+fun pedirIntPositivo(): Int{
+    var num: Int?
+    do {
+        val valor = readln()
+        if (valor == "") return 0
+        num = valor.toIntOrNull()
 
+
+
+        if (num == null || num < 1) println("Debes introducir un numero entero positivo: ")
+
+    }while (num == null || num < 1)
+    return num
+}
 
 fun ejercicioBasico5(){
 
+    // Pedimos hora minutos y segundos permitiendo saltarse los minutos y segundos, o segundos.
+    println("Introduce hora: ")
+    val horas = pedirIntPositivo()
+
+    println("Introduce minutos (enter para omitir): ")
+    val minutos = pedirIntPositivo()
+
+    println("Introduce segundos (enter para omitir): ")
+    val segundos = pedirIntPositivo()
+
+    // Instanciamos la clase tiempo con los valores pedidos
+
+    val tiempo1 = Tiempo(horas, minutos, segundos)
+    println(tiempo1.toString())
+
+    println(65%60)
 }
 
 
