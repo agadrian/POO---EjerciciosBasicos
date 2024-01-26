@@ -551,11 +551,48 @@ class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
 
 
     init {
-
         require(hora in 0..23) { "ERROR - La hora debe estar entre 0..23" }
-        require(minuto in 0..59) { "ERROR - Los minutos deben estar entre 0..59" }
-        require(segundo in 0..59) { "ERROR - Los segundos deben estar entre 0..59" }
 
+        if (segundo > 60){
+            minuto += segundo / 60
+            segundo %= 60
+        }
+
+        if (minuto > 60){
+            hora += minuto / 60
+            minuto %= 60
+        }
+    }
+
+    fun incrementar(t: Tiempo): Boolean{
+        // 01:23:34
+        this.segundo += t.segundo
+        this.minuto += t.minuto
+        this.hora += t.hora
+        formatearHora(this)
+
+        return this.hora <= 23
+    }
+
+    //TODO CORREGIR CUANDO SON NEGATIVOS
+    fun decrementar(t: Tiempo): Boolean{
+        this.segundo -= t.segundo
+        this.minuto -= t.minuto
+        this.hora -= t.hora
+        formatearHora(this)
+        return (this.segundo >= 0 && this.minuto >= 0 && this.hora >= 0)
+    }
+
+    fun formatearHora(t: Tiempo){
+        if (t.segundo > 60){
+            t.minuto += t.segundo / 60
+            t.segundo %= 60
+        }
+
+        if (t.minuto > 60){
+            t.hora += t.minuto / 60
+            t.minuto %= 60
+        }
     }
 
 
@@ -576,39 +613,58 @@ class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
     }
 }
 
-fun pedirIntPositivo(): Int{
+
+fun pedirTiempo(msg: String, obligatorio: Boolean = true): Int{
     var num: Int?
+    println(msg)
     do {
         val valor = readln()
-        if (valor == "") return 0
-        num = valor.toIntOrNull()
+        num = if (valor.isBlank()) {
+                if (obligatorio) {
+                    println("Este valor es obligatorio: ")
+                    null
+                } else 0
 
+        }else valor.toIntOrNull()
 
+        if (num == null || num < 0) println("Debes introducir un numero valido")
 
-        if (num == null || num < 1) println("Debes introducir un numero entero positivo: ")
-
-    }while (num == null || num < 1)
+    }while (num == null || num < 0)
     return num
 }
+
+
+
+
 
 fun ejercicioBasico5(){
 
     // Pedimos hora minutos y segundos permitiendo saltarse los minutos y segundos, o segundos.
-    println("Introduce hora: ")
-    val horas = pedirIntPositivo()
-
-    println("Introduce minutos (enter para omitir): ")
-    val minutos = pedirIntPositivo()
-
-    println("Introduce segundos (enter para omitir): ")
-    val segundos = pedirIntPositivo()
+    //TODO TRY CATCH EXPECIONES
+    val horas = pedirTiempo("Introduce hora: ")
+    val minutos = pedirTiempo("Introduce minutos (enter para omitir)", false)
+    val segundos = pedirTiempo("Introduce segundos (enter para omitir): ", false)
 
     // Instanciamos la clase tiempo con los valores pedidos
-
     val tiempo1 = Tiempo(horas, minutos, segundos)
     println(tiempo1.toString())
 
-    println(65%60)
+    // Metodo incrementar tiempo
+    val tiempo2 = Tiempo(pedirTiempo("Introduce hora: "),pedirTiempo("Introduce minutos (enter para omitir): ", false),pedirTiempo("Introduce segundos (enter para omitir): ", false))
+    if (!(tiempo1.incrementar(tiempo2))) println("Error, la hora resultante no es valida!: $tiempo1")
+
+    println("*********************************")
+    println("Tiempo actual $tiempo1")
+    println("*********************************")
+
+    //Metodo decrementar tiempo
+    val tiempo3 = Tiempo(pedirTiempo("Introduce hora: "),pedirTiempo("Introduce minutos (enter para omitir): ", false),pedirTiempo("Introduce segundos (enter para omitir): ", false))
+    //val sumaTiempo = tiempo1.decrementar(tiempo3)
+    if (!(tiempo1.decrementar(tiempo3))) println("Error, la hora resultante no es valida!: $tiempo1")
+
+    println("*********************************")
+    println("Tiempo actual $tiempo1")
+    println("*********************************")
 }
 
 
