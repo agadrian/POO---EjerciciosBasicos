@@ -1,6 +1,7 @@
 import java.nio.DoubleBuffer
 import java.util.*
 import javax.print.attribute.standard.PagesPerMinute
+import kotlin.math.min
 import kotlin.reflect.typeOf
 
 /**
@@ -565,11 +566,11 @@ class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
     }
 
     fun incrementar(t: Tiempo): Boolean{
-        // 01:23:34
+
         this.segundo += t.segundo
         this.minuto += t.minuto
         this.hora += t.hora
-        formatearHora(this)
+        formatearTiempo(this)
 
         return this.hora <= 23
     }
@@ -579,11 +580,11 @@ class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
         this.segundo -= t.segundo
         this.minuto -= t.minuto
         this.hora -= t.hora
-        formatearHora(this)
+        formatearTiempo(this)
         return (this.segundo >= 0 && this.minuto >= 0 && this.hora >= 0)
     }
 
-    fun formatearHora(t: Tiempo){
+    fun formatearTiempo(t: Tiempo){
         if (t.segundo > 60){
             t.minuto += t.segundo / 60
             t.segundo %= 60
@@ -595,6 +596,71 @@ class Tiempo(var hora: Int, var minuto: Int = 0, var segundo: Int = 0){
         }
     }
 
+    fun comparar(t: Tiempo): Int{
+        val segundos1 = (this.hora * 3600) + (this.minuto * 60) +  (this.segundo)
+        val segundos2 = (t.hora * 3600) + (t.minuto * 60) +  (t.segundo)
+        return when{
+            segundos1 < segundos2 -> -1
+            segundos1 > segundos2 -> 1
+            else -> 0
+        }
+    }
+
+
+    fun copiar():Tiempo{
+        return Tiempo(this.hora, this.minuto, this.segundo)
+    }
+
+
+    fun copiar(t:Tiempo):Tiempo{
+        return Tiempo(t.hora, t.minuto, t.segundo)
+    }
+
+    fun sumar(t: Tiempo):Tiempo?{
+        this.segundo += t.segundo
+        this.minuto += t.minuto
+        this.hora += t.hora
+
+        val segundos = (this.hora * 3600) + (this.minuto * 60) +  (this.segundo)
+        if (segundos > 86400){
+            return null
+        }
+
+        formatearTiempo(this)
+        return this
+    }
+
+    /**
+    fun restar(t: Tiempo): Tiempo?{
+        //TODO
+
+    }*/
+
+    fun esMayorQue(t: Tiempo): Boolean{
+        val segundos = (this.hora * 3600) + (this.minuto * 60) +  (this.segundo)
+        val segundos2 = (t.hora * 3600) + (t.minuto * 60) +  (t.segundo)
+        if (segundos > segundos2){
+            println("El tiempo actual es mayor.")
+            return true
+        }
+        return false
+    }
+
+    fun esMenorQue(t: Tiempo): Boolean{
+        val segundos = (this.hora * 3600) + (this.minuto * 60) +  (this.segundo)
+        val segundos2 = (t.hora * 3600) + (t.minuto * 60) +  (t.segundo)
+        if (segundos2 > segundos){
+            println("El tiempo actual es menor.")
+            return true
+        }
+        return false
+    }
+
+    //TODO ACABAR ESTA FUNCION Y REEMPLAZARLA EN TODO EL CODIGO REPETIDO QUE HAY
+    fun calcularSegundos(tiempo: Tiempo): Int{
+        val segundos = (tiempo.hora * 3600) + (tiempo.minuto * 60) +  (tiempo.segundo)
+        return segundos
+    }
 
     /**
      * Reemplazamos la funcion toString() para mostrar la hora formateada correctamente
@@ -639,17 +705,21 @@ fun pedirTiempo(msg: String, obligatorio: Boolean = true): Int{
 
 fun ejercicioBasico5(){
 
-    // Pedimos hora minutos y segundos permitiendo saltarse los minutos y segundos, o segundos.
-    //TODO TRY CATCH EXPECIONES
-    val horas = pedirTiempo("Introduce hora: ")
-    val minutos = pedirTiempo("Introduce minutos (enter para omitir)", false)
-    val segundos = pedirTiempo("Introduce segundos (enter para omitir): ", false)
 
+    //TODO TRY CATCH EXPECIONES AL INTRODCUIR DATOS DE HORA MIN SEG
+
+    // obejto tiempo fijo test
+    val testTiempo = Tiempo(6,20,10)
+    val testTiempo2 = Tiempo(10,50,6)
+
+/*
     // Instanciamos la clase tiempo con los valores pedidos
-    val tiempo1 = Tiempo(horas, minutos, segundos)
+    println("TIEMPO 1:")
+    val tiempo1 = Tiempo(pedirTiempo("Introduce hora: "),pedirTiempo("Introduce minutos (enter para omitir): ", false),pedirTiempo("Introduce segundos (enter para omitir): ", false))
     println(tiempo1.toString())
 
     // Metodo incrementar tiempo
+    println("TIEMPO 2:")
     val tiempo2 = Tiempo(pedirTiempo("Introduce hora: "),pedirTiempo("Introduce minutos (enter para omitir): ", false),pedirTiempo("Introduce segundos (enter para omitir): ", false))
     if (!(tiempo1.incrementar(tiempo2))) println("Error, la hora resultante no es valida!: $tiempo1")
 
@@ -658,6 +728,7 @@ fun ejercicioBasico5(){
     println("*********************************")
 
     //Metodo decrementar tiempo
+    println("TIEMPO 3:")
     val tiempo3 = Tiempo(pedirTiempo("Introduce hora: "),pedirTiempo("Introduce minutos (enter para omitir): ", false),pedirTiempo("Introduce segundos (enter para omitir): ", false))
     //val sumaTiempo = tiempo1.decrementar(tiempo3)
     if (!(tiempo1.decrementar(tiempo3))) println("Error, la hora resultante no es valida!: $tiempo1")
@@ -665,6 +736,35 @@ fun ejercicioBasico5(){
     println("*********************************")
     println("Tiempo actual $tiempo1")
     println("*********************************")
+
+
+    if (testTiempo.comparar(tiempo2) == 0) {
+        println("Tiempo iguales")
+    } else if (testTiempo.comparar(tiempo2) == 1) {
+        println("Tiempo1 es mayor que Tiempo2")
+    } else if (testTiempo.comparar(tiempo2) == -1) {
+        println("Tiempo1 es menor que Tiempo2")
+    } else {
+        println("Comparación no valida")
+    }
+*/
+    // Prueba del metodo .copiar() con el testTiempo
+    println("Print testTiempo: $testTiempo")
+    println("Print testTiempo.copia(): ${testTiempo.copiar()}")
+
+    println("************************************")
+
+    // Prueba del metodo .copiar(t:Tiempo) con el testTiempo2
+    val copiaTestTiempo2 = testTiempo2.copiar(testTiempo2)
+    println("Print testTiempo2: $testTiempo2")
+    println("Print copiaTestTiempo: $copiaTestTiempo2")
+
+    println("************************************")
+
+    // Pueba metodo sumar(t:Tiempo)
+    println("testTiempo : $testTiempo")
+    println("testTiempo2: $testTiempo2")
+    println("Suma de testTiempo y testTiempo2: ${testTiempo.sumar(testTiempo2)}")
 }
 
 
